@@ -1,0 +1,49 @@
+GET http://localhost:5000/ HTTP/1.1
+
+### User signup
+POST http://localhost:5000/signup/user HTTP/1.1
+Content-Type: application/json
+
+{
+    "email" : "sv090999@gmail.com",
+    "contact": "9580126717",
+    "username" : "ui22ec23",
+    "password" : "svishwa@123"
+}
+
+### Admin signup
+POST http://localhost:5000/signup/admin HTTP/1.1
+Content-Type: application/json
+
+{
+    "email" : "dvishu2610@gmail.com",
+    "username" : "Divyanshu",
+    "password" : "dvishu$123"
+}
+
+### User login
+POST http://localhost:5000/login/user HTTP/1.1
+Content-Type: application/json
+
+{
+    "username" : "ui22ec23",
+    "password" : "svishwa@123"
+}
+
+### Admin login
+POST http://localhost:5000/login/admin HTTP/1.1
+Content-Type: application/json
+
+{
+    "username" : "Divyanshu",
+    "password" : "dvishu$123"
+}
+
+### Update User
+PUT http://localhost:5000/user/661e59063bcf834d2dbf15f5/update HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Dvishu",
+    "contact" : "9580126756"
+}

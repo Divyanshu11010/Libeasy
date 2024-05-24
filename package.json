@@ -1,0 +1,31 @@
+{
+  "name": "libeasy",
+  "version": "1.0.0",
+  "description": "A solution for librarians",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon run ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/D-coderDivyanshu/Libeasy.git"
+  },
+  "author": "Divyanshu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/D-coderDivyanshu/Libeasy/issues"
+  },
+  "homepage": "https://github.com/D-coderDivyanshu/Libeasy#readme",
+  "dependencies": {
+    "@prisma/client": "^5.12.1",
+    "bcrypt": "^5.1.1",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^5.12.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
