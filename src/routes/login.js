@@ -17,51 +17,39 @@ router.post("/user", async (req, res) => {
             }
         })
 
-        // Comparing the db password with entered password
+        /// Comparing the db password with entered password
+        if (!user) {
+            res.json({ "error": "Unauthorized access" });
+        }
         const check = await bcrypt.compare(req.body.password, user.password);
 
         if (check) {
 
+            /// generating access token
+            const accessToken = genAuthToken(user.id);
+
             /// creating token object in db
-            const token = await prisma.token.create(
-                {
+            if (accessToken) {
+                await prisma.token.create({
                     data: {
-                        valid: false,
-                        exprTime: null,
+                        authToken: accessToken,
+                        valid: true,
+                        exprTime: expiry,
                         user: {
                             connect: {
-                                where: {
-                                    email: user.email
-                                }
+                                email: user.email
                             }
                         }
                     }
-                }
-            )
-
-            /// generating access token
-            let accessToken;
-            if (token) {
-                accessToken = genAuthToken(token.id);
-            }
-
-            /// updating token object with authToken, exprTime, valid
-            if (accessToken) {
-                await prisma.token.update({
-                    data: {
-                        authToken: accessToken,
-                        exprTime: expiry,
-                        valid: true,
-                    }
                 })
-                console.log(token);
+
                 console.log("Now you can do login without pass");
             }
 
             res.send("Successful Login");
         }
         else {
-            res.send("Entered combination is wrong");
+            res.json({ "error:": "Wrong Combination" });
         }
     } catch (error) {
         console.log(error);
@@ -76,11 +64,31 @@ router.post("/admin", async (req, res) => {
                 username: req.body.username,
             }
         })
+
+        /// Comparing the password with hashed value
         const check = await bcrypt.compare(req.body.password, admin.password);
 
         if (check) {
+            /// generate auth token
+            const accessToken = genAuthToken(admin.id);
+
+            if (accessToken) {
+                /// Token creation
+                await prisma.token.create({
+                    data: {
+                        authToken: accessToken,
+                        valid: true,
+                        exprTime: expiry,
+                        admin: {
+                            connect: {
+                                email: admin.email
+                            }
+                        }
+                    }
+                })
+                console.log("Now there is no need of password :)");
+            }
             res.send("Successful Login");
-            await createToken(email);
         }
         else {
             res.send("Entered combination is wrong");

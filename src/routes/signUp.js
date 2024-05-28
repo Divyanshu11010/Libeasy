@@ -20,9 +20,6 @@ router.post("/user", async (req, res) => {
                 }
             })
             
-            // Auth token creation 
-            await createToken(email);
-            
             res.status(200).send("Successfully Created Account");
         }
         else {
@@ -30,6 +27,7 @@ router.post("/user", async (req, res) => {
         }
     } catch (error) {
         console.log(error);
+        res.end("error: see console");
     }
 })
 

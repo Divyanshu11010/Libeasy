@@ -37,6 +37,7 @@ model Admin {
   name       String?
   password   String   @unique
   isVerified Boolean  @default(false)
+  token      Token[]
 }
 
 model Book {
@@ -45,7 +46,7 @@ model Book {
   updateAt  DateTime @updatedAt
   title     String   @unique
   author    String
-  userID    String   @unique @db.ObjectId
+  userID    String   @db.ObjectId
   user      User     @relation(fields: [userID], references: [id])
 }
 
@@ -57,5 +58,6 @@ model Token {
   valid     Boolean
   exprTime  DateTime
   userID    String   @unique @db.ObjectId
-  user      User     @relation(fields: userID, references: id)
+  user      User?    @relation(fields: [userID], references: [id])
+  admin     Admin?   @relation(fields: [userID], references: [id])
 }

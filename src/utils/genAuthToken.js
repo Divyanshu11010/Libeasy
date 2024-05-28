@@ -10,7 +10,7 @@ function genAuthToken(tokenID) {
         return token;
     } catch (error) {
         console.log(error);
-        return ;
+        return null;
     }
 }
 
