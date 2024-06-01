@@ -65,7 +65,7 @@ model Token {
 model Booklist {
   id      String  @id @default(auto()) @map("_id") @db.ObjectId
   cover   String?
-  title   String  @unique
+  title   String
   author  String
   ISBN    String  @unique
   details String
