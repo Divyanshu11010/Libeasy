@@ -11,6 +11,7 @@ import login from "./routes/login.js";
 
 //. For verification
 import { verifyToken } from "./middlewares/verifyToken.js";
+import { verifyAdminToken } from "./middlewares/verifyAdminToken.js";
 
 //. Body parser
 import bodyParser from "body-parser";
@@ -23,7 +24,7 @@ app.use(bodyParser.json());
 app.use("/signup", encryption, signUp);
 app.use("/login", login);
 app.use("/user", verifyToken, user);
-app.use("/admin", verifyToken, admin);
+app.use("/admin", verifyAdminToken, admin);
 // app.use("/forgot", reset);
 
 app.listen(5000, () => {

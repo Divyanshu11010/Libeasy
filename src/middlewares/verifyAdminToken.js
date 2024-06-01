@@ -6,19 +6,19 @@ const prisma = new PrismaClient;
 
 const SECRET_KEY = "@localSecret";
 
-export async function verifyToken(req, res, next) {
+export async function verifyAdminToken(req, res, next) {
 
     /// extracting authorization token from http header
     const authHeader = req.headers["authorization"];
-    const userToken = authHeader?.split(" ")[1];
-    if (!userToken) {
+    const adminToken = authHeader?.split(" ")[1];
+    if (!adminToken) {
         return res.status(401).json({ "error": "Unauthorized access" });
     }
     else {
         try {
 
             /// verifying jwt token
-            const jwtPayload = jwt.verify(userToken, SECRET_KEY)
+            const jwtPayload = jwt.verify(adminToken, SECRET_KEY)
 
             /// Checking if there is any token
             const dbtoken = await prisma.token.findUnique({
@@ -31,18 +31,18 @@ export async function verifyToken(req, res, next) {
                 return res.json({ "error": "Unauthorized access" });
             }
 
-            /// Conforming user's profile
-            const dbuser = await prisma.user.findUnique({
+            /// Conforming admin's profile
+            const dbAdmin = await prisma.admin.findUnique({
                 where: {
                     id: dbtoken.userID
                 }
             })
 
-            if (!dbuser) {
+            if (!dbAdmin) {
                 return res.json({ "error": "Unauthorized access" });
             }
             
-            req.user = dbtoken.userID
+            req.admin = dbtoken.adminID
             next();
         } catch (error) {
             console.log(error);
