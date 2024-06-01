@@ -37,6 +37,18 @@ Content-Type: application/json
     "password" : "dvishu$123"
 }
 
+### Add book (admin)
+POST http://localhost:5000/admin/add_books HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWRhMTMxNDNlYTA5NzY2N2U5NzJiIn0.YLISNgatmasks0BEhzSuWbqE0Hn_BiYliS7WEiFZc1A
+Content-Type: application/json
+
+{
+    "title": "Introduction to Analog Circuit",
+    "author": "Michle Mohr",
+    "ISBN": "xyz123456790",
+    "details": "This is complete book for understanding analog circuitry !"
+}
+
 ### Get list of all books
 GET http://localhost:5000/user/all_books HTTP/1.1
 Authorization: Bearer eyJhbGciOJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWFjY2Y4OTIwMDZiZWYxYjMwNjQwIn0.PeQQd5u-4K3lInLxfgV5kHW_revI27o7hH8__dDDyk8

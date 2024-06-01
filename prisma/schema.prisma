@@ -61,3 +61,12 @@ model Token {
   user      User?    @relation(fields: [userID], references: [id])
   admin     Admin?   @relation(fields: [userID], references: [id])
 }
+
+model Booklist {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  cover   String?
+  title   String  @unique
+  author  String
+  ISBN    String  @unique
+  details String
+}

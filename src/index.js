@@ -1,5 +1,6 @@
 import express from "express";
 import user from "./routes/user.js";
+import admin from "./routes/admin.js";
 
 //. For sign up
 import signUp from "./routes/signUp.js";
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 app.use("/signup", encryption, signUp);
 app.use("/login", login);
 app.use("/user", verifyToken, user);
+app.use("/admin", verifyToken, admin);
 // app.use("/forgot", reset);
 
 app.listen(5000, () => {

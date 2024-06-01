@@ -7,16 +7,11 @@ const prisma = new PrismaClient();
 //! Get available books
 router.get("/all_books", async () => {
     try {
-        const list = prisma.book.findMany({
-            include:{
-                userID: false,
-                user: false
-            }
-        });
-        console.log(list);
+        const list = await prisma.booklist.findMany();
+        res.json(list);
     } catch (error) {
         console.log(error);
-        res.json({"error": "See console"});
+        res.json({ "error": "See console" });
     }
 })
 
