@@ -15,55 +15,75 @@ router.get("/all_books", async () => {
     }
 })
 
-//! adding a book
-router.post("/addBook", async (req, res) => {
-    const { title, author } = req.body;
+//! Request for book
+router.post("/ask/:id", async (req, res) => {
+    const { id } = req.params;
     try {
-        /// Creating book document
-        const book = await prisma.book.create({
-            data: {
-                title: title,
-                author: author,
-                user: {
-                    connect: {
-                        id: req.user
-                    }
-                }
+        /// Fetching the book
+        const book = await prisma.booklist.findUnique({
+            where: {
+                id
             }
         })
 
-        if (!book) {
+        /// Creating book document
+        if (book) {
+            const userBook = await prisma.book.create({
+                data: {
+                    title: book.title,
+                    author: book.author,
+                    status: "Pending",
+                    userID: req.user
+                }
+            });
+            res.json({ userBook });
+        }
+        else {
             console.log("Failed to add :(");
             res.end();
         }
-        res.json({ book });
+
     } catch (error) {
         console.log(error);
         res.send("error: See console");
     }
 })
-router.get("/issued_books")
-router.get("/profile")
 
-
-router.put("/update", async (req, res) => {
-    const { id } = req.params;
-    const { contact, name, idCard } = req.body;
+//! Get the list of issued books
+router.get("/issued", async (req, res) => {
     try {
-        const updatedUser = await prisma.user.update({
-            where: {
-                id
-            },
-            data: {
-                contact,
-                name,
-                profile,
-                idCard
+        const issuedBooks = await prisma.book.findMany({
+            where:{
+                status: "Issued",
+                userID: req.user
             }
         })
-        res.status(200).send(updatedUser);
+        res.json(issuedBooks);
     } catch (error) {
         console.log(error);
+        res.josn({"error": "see console"});
+    }
+})
+
+//! See profile
+router.get("/profile", async (req, res) => {
+    try {
+        const userProfile = await prisma.user.findUnique({
+            where:{
+                id: req.user
+            },
+            include:{
+                email: true,
+                username: true,
+                contact: true,
+                name: true,
+                idCard: true,
+            }
+        })
+        res.json(userProfile)
+    } catch (error) {
+        console.error(error);
+        res.json({"error": "see console"});
     }
 })
 router.put("/verify")

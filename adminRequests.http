@@ -1,0 +1,38 @@
+### Admin signup
+POST http://localhost:5000/signup/admin HTTP/1.1
+Content-Type: application/json
+
+{
+    "email" : "dvishu2610@gmail.com",
+    "username" : "Divyanshu",
+    "password" : "dvishu$123"
+}
+
+### Admin login
+POST http://localhost:5000/login/admin HTTP/1.1
+Content-Type: application/json
+
+{
+    "username" : "Divyanshu",
+    "password" : "dvishu$123"
+}
+
+### Add book (admin)
+POST http://localhost:5000/admin/add_books HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWRhMTMxNDNlYTA5NzY2N2U5NzJiIn0.YLISNgatmasks0BEhzSuWbqE0Hn_BiYliS7WEiFZc1A
+Content-Type: application/json
+
+{
+    "title": "Introduction to Analog Circuit",
+    "author": "Michle Mohr",
+    "ISBN": "xyz123456790",
+    "details": "This is complete book for understanding analog circuitry !"
+}
+
+### Issue Requests
+GET http://localhost:5000/admin/requests HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWRhMTMxNDNlYTA5NzY2N2U5NzJiIn0.YLISNgatmasks0BEhzSuWbqE0Hn_BiYliS7WEiFZc1A
+
+### Resolve issue
+PUT http://localhost:5000/admin/issue/665c2b89d8c77e53c5ed9c98 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWRhMTMxNDNlYTA5NzY2N2U5NzJiIn0.YLISNgatmasks0BEhzSuWbqE0Hn_BiYliS7WEiFZc1A

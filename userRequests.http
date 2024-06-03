@@ -1,0 +1,36 @@
+### User signup
+POST http://localhost:5000/signup/user HTTP/1.1
+Content-Type: application/json
+
+{
+    "email" : "sv090999@gmail.com",
+    "contact": "9580126717",
+    "username" : "ui22ec23",
+    "password" : "svishwa@123"
+}
+
+### User login
+POST http://localhost:5000/login/user HTTP/1.1
+Content-Type: application/json
+
+{
+    "username" : "ui22ec23",
+    "password" : "svishwa@123"
+}
+
+### Get list of all books
+GET http://localhost:5000/user/all_books HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWFjY2Y4OTIwMDZiZWYxYjMwNjQwIn0.PeQQd5u-4K3lInLxfgV5kHW_revI27o7hH8__dDDyk8
+
+### Request book
+POST http://localhost:5000/user/ask/665c2b89d8c77e53c5ed9c98 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWFjY2Y4OTIwMDZiZWYxYjMwNjQwIn0.PeQQd5u-4K3lInLxfgV5kHW_revI27o7hH8__dDDyk8
+Content-Type: application/json
+
+### Get list of issued books
+GET http://localhost:5000/user/issued HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWFjY2Y4OTIwMDZiZWYxYjMwNjQwIn0.PeQQd5u-4K3lInLxfgV5kHW_revI27o7hH8__dDDyk8
+
+### Get profile
+GET http://localhost:5000/user/issued HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWFjY2Y4OTIwMDZiZWYxYjMwNjQwIn0.PeQQd5u-4K3lInLxfgV5kHW_revI27o7hH8__dDDyk8
