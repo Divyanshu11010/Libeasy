@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient;
 
-const SECRET_KEY = "@localSecret";
+const SECRET_KEY = process.env.JWT_SECRET ||"@localSecret";
 
 export async function verifyToken(req, res, next) {
 

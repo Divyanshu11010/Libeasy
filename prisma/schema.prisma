@@ -24,6 +24,7 @@ model User {
   name       String?
   idCard     String?
   isVerified Boolean  @default(false)
+  lastVisit  DateTime
   books      Book[]
   token      Token[]
 }
@@ -37,6 +38,7 @@ model Admin {
   name       String?
   password   String   @unique
   isVerified Boolean  @default(false)
+  lastVisit  DateTime
   token      Token[]
 }
 

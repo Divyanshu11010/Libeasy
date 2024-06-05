@@ -19,7 +19,7 @@ Content-Type: application/json
 
 ### Add book (admin)
 POST http://localhost:5000/admin/add_books HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWRhMTMxNDNlYTA5NzY2N2U5NzJiIn0.YLISNgatmasks0BEhzSuWbqE0Hn_BiYliS7WEiFZc1A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1ZWNlYjVjNWY0Y2JlNmI3ZDQyODhhIn0.gXI3r73-tRQqimaxI6Y492eAJqyXHAwN6DwqHfDqe8w
 Content-Type: application/json
 
 {

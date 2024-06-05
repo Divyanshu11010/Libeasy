@@ -16,6 +16,14 @@ import { verifyAdminToken } from "./middlewares/verifyAdminToken.js";
 //. Body parser
 import bodyParser from "body-parser";
 
+//. Monitoring last visit
+import { lastUserVisit } from "./middlewares/lastUserVisit.js";
+import { lastAdminVisit } from "./middlewares/lastAdminVisit.js";
+
+//. Making token invalid
+import { updateUserToken } from "./middlewares/updateUserToken.js";
+import { updateAdminToken } from "./middlewares/updateAdminToken.js";
+
 const app = express();
 
 app.use(express.json());
@@ -23,8 +31,8 @@ app.use(bodyParser.json());
 
 app.use("/signup", encryption, signUp);
 app.use("/login", login);
-app.use("/user", verifyToken, user);
-app.use("/admin", verifyAdminToken, admin);
+app.use("/user", verifyToken, updateUserToken, lastUserVisit, user);
+app.use("/admin", verifyAdminToken, updateAdminToken, lastAdminVisit, admin);
 // app.use("/forgot", reset);
 
 app.listen(5000, () => {

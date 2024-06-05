@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 
-const SECRET_KEY = "@localSecret";
+const SECRET_KEY = process.env.JWT_SECRET ||"@localSecret";
 
 //. Function to generate authToken 
 function genAuthToken(tokenID) {

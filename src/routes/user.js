@@ -5,7 +5,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 //! Get available books
-router.get("/all_books", async () => {
+router.get("/all_books", async (req, res) => {
     try {
         const list = await prisma.booklist.findMany();
         res.json(list);

@@ -16,7 +16,8 @@ router.post("/user", async (req, res) => {
                     email,
                     contact,
                     username,
-                    password
+                    password,
+                    lastVisit: new Date()
                 }
             })
             
@@ -31,6 +32,7 @@ router.post("/user", async (req, res) => {
     }
 })
 
+//! admin sign up
 router.post("/admin", async (req, res) => {
     const { email, username, password } = req.body;
     try {
@@ -44,7 +46,8 @@ router.post("/admin", async (req, res) => {
                 data: {
                     email,
                     username,
-                    password
+                    password,
+                    lastVisit: new Date()
                 }
             })
             res.status(200).send("Successfully created");

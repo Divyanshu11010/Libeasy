@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient;
 
-const SECRET_KEY = "@localSecret";
+const SECRET_KEY = process.env.JWT_SECRET ||"@localSecret";
 
 export async function verifyAdminToken(req, res, next) {
 
@@ -42,7 +42,7 @@ export async function verifyAdminToken(req, res, next) {
                 return res.json({ "error": "Unauthorized access" });
             }
             
-            req.admin = dbtoken.adminID
+            req.admin = dbtoken.userID
             next();
         } catch (error) {
             console.log(error);
