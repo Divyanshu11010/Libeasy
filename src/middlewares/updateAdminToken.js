@@ -7,24 +7,23 @@ const INTERACTING_PERIOD = process.env.INTERACTING_PERIOD || 10;
 
 export async function updateAdminToken(req, res, next) {
     try {
-        // fetching user
+        //. fetching user
         const admin = await prisma.admin.findUnique({
             where: {
                 id: req.admin
             }
         })
 
-        // fetching db token 
+        //. fetching db token 
         const token = await prisma.token.findUnique({
             where: {
                 userID: req.admin
             }
         })
 
-        // check if its under expiry period
+        //. check if its under expiry period
         if (token.exprTime < new Date()) {
             if (new Date(admin.lastVisit + INTERACTING_PERIOD * 60 * 1000) < new Date()) {
-                console.log("inner if");
                 await prisma.token.update({
                     data: {
                         valid: false
@@ -35,6 +34,7 @@ export async function updateAdminToken(req, res, next) {
                 })
             }
         }
+        // Token gets invalidated accordingly
         next();
     } catch (error) {
         console.log(error);

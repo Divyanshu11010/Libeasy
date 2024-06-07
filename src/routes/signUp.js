@@ -8,7 +8,7 @@ const router = Router();
 router.post("/user", async (req, res) => {
     const { email, contact, username, password } = req.body;
     try {
-        const user = await prisma.user.findUnique({ where: { email: email, username: username} });
+        const user = await prisma.user.findUnique({ where: { email: email, username: username } });
         if (!user) {
             // User creation
             await prisma.user.create({
@@ -20,8 +20,8 @@ router.post("/user", async (req, res) => {
                     lastVisit: new Date()
                 }
             })
-            
-            res.status(200).send("Successfully Created Account");
+
+            res.status(200).json({ "message": "Account created" });
         }
         else {
             res.json({ "error": "User Already Exists! do login" });
@@ -50,7 +50,7 @@ router.post("/admin", async (req, res) => {
                     lastVisit: new Date()
                 }
             })
-            res.status(200).send("Successfully created");
+            res.status(200).json({ "message": "Account created" });
         }
         else {
             res.status(401).json({ "error": "Admin already exits" });

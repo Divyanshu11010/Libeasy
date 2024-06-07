@@ -8,19 +8,18 @@ const SECRET_KEY = process.env.JWT_SECRET ||"@localSecret";
 
 export async function verifyToken(req, res, next) {
 
-    /// extracting authorization token from http header
-    const authHeader = req.headers["authorization"];
-    const userToken = authHeader?.split(" ")[1];
+    //. extracting authorization token from http header
+    const userToken = req.cookies.authToken;
     if (!userToken) {
         return res.status(401).json({ "error": "Unauthorized access" });
     }
     else {
         try {
 
-            /// verifying jwt token
+            //. verifying jwt token
             const jwtPayload = jwt.verify(userToken, SECRET_KEY)
 
-            /// Checking if there is any token
+            //. Checking if there is any token
             const dbtoken = await prisma.token.findUnique({
                 where: {
                     userID: jwtPayload.tokenID
@@ -28,10 +27,10 @@ export async function verifyToken(req, res, next) {
             })
 
             if (!dbtoken || !dbtoken.valid) {
-                return res.json({ "error": "Unauthorized access" });
+                return res.status(401).json({ "error": "Unauthorized access" });
             }
 
-            /// Conforming user's profile
+            //. Conforming user's profile
             const dbuser = await prisma.user.findUnique({
                 where: {
                     id: dbtoken.userID
@@ -39,14 +38,15 @@ export async function verifyToken(req, res, next) {
             })
 
             if (!dbuser) {
-                return res.json({ "error": "Unauthorized access" });
+                return res.status(401).json({ "error": "Unauthorized access" });
             }
             
+            //. adding {user: userID} in the req object
             req.user = dbtoken.userID
             next();
         } catch (error) {
             console.log(error);
-            res.json({ "error": "Unauthorized access" });
+            res.status(401).json({ "error": "Unauthorized access" });
         }
     }
 }

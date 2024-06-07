@@ -20,17 +20,24 @@ Content-Type: application/json
 
 ### Get list of all books
 GET http://localhost:5000/user/all_books HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1ZWNlY2ZjNWY0Y2JlNmI3ZDQyODhiIn0.D-UJrZPAUrMhvZhj1tp1dYkMjBN8v1ka2u6xoYR-tSI
 
 ### Request book
-POST http://localhost:5000/user/ask/665c2b89d8c77e53c5ed9c98 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWFjY2Y4OTIwMDZiZWYxYjMwNjQwIn0.PeQQd5u-4K3lInLxfgV5kHW_revI27o7hH8__dDDyk8
-Content-Type: application/json
+POST http://localhost:5000/user/ask/6661527100d54b313ebe7c56 HTTP/1.1
 
 ### Get list of issued books
 GET http://localhost:5000/user/issued HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWFjY2Y4OTIwMDZiZWYxYjMwNjQwIn0.PeQQd5u-4K3lInLxfgV5kHW_revI27o7hH8__dDDyk8
 
 ### Get profile
-GET http://localhost:5000/user/issued HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWFjY2Y4OTIwMDZiZWYxYjMwNjQwIn0.PeQQd5u-4K3lInLxfgV5kHW_revI27o7hH8__dDDyk8
+GET http://localhost:5000/user/profile HTTP/1.1
+
+### Update profile
+PUT http://localhost:5000/user/profile HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Divyanshu Vishwakarma",
+    "idCard": "This is the image string of id"
+}
+
+### Logout user
+DELETE http://localhost:5000/user/logout HTTP/1.1

@@ -18,21 +18,36 @@ Content-Type: application/json
 }
 
 ### Add book (admin)
-POST http://localhost:5000/admin/add_books HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1ZWNlYjVjNWY0Y2JlNmI3ZDQyODhhIn0.gXI3r73-tRQqimaxI6Y492eAJqyXHAwN6DwqHfDqe8w
+POST http://localhost:5000/admin/add_book HTTP/1.1
 Content-Type: application/json
 
 {
-    "title": "Introduction to Analog Circuit",
-    "author": "Michle Mohr",
-    "ISBN": "xyz123456790",
-    "details": "This is complete book for understanding analog circuitry !"
+    "title": "Micro Electronics",
+    "author": "Sedra and Smith",
+    "ISBN": "abc1101011010",
+    "details": "The best solution for amplifiers"
 }
+
+### Remove book
+DELETE http://localhost:5000/admin/remove_book/66601afdc0cd4ce0c6358941 HTTP/1.1
+
+### Get all books
+GET http://localhost:5000/admin/all_books HTTP/1.1
+
+### Get all issued books
+GET http://localhost:5000/admin/issued_books HTTP/1.1
+
+### Get all users
+GET http://localhost:5000/admin/user_list HTTP/1.1
 
 ### Issue Requests
 GET http://localhost:5000/admin/requests HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWRhMTMxNDNlYTA5NzY2N2U5NzJiIn0.YLISNgatmasks0BEhzSuWbqE0Hn_BiYliS7WEiFZc1A
 
 ### Resolve issue
-PUT http://localhost:5000/admin/issue/665c2b89d8c77e53c5ed9c98 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklEIjoiNjY1MWRhMTMxNDNlYTA5NzY2N2U5NzJiIn0.YLISNgatmasks0BEhzSuWbqE0Hn_BiYliS7WEiFZc1A
+PUT http://localhost:5000/admin/issue/6661585ad3a85e52d71ef407 HTTP/1.1
+
+### Accept return
+DELETE http://localhost:5000/admin/return/6660259dec675a0311b313c9 HTTP/1.1
+
+### Logout admin
+DELETE http://localhost:5000/admin/logout HTTP/1.1

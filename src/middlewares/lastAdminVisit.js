@@ -12,7 +12,7 @@ export async function lastAdminVisit(req, res, next) {
                 id: req.admin
             }
         })
-        console.log("new visit");
+        // visit updated
         next();
     } catch (error) {
         console.log(error);

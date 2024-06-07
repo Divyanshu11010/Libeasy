@@ -7,7 +7,15 @@ const prisma = new PrismaClient();
 //! Get available books
 router.get("/all_books", async (req, res) => {
     try {
-        const list = await prisma.booklist.findMany();
+        const list = await prisma.booklist.findMany({
+            select: {
+                cover: true,
+                title: true,
+                author: true,
+                ISBN: true,
+                details: true
+            }
+        });
         res.json(list);
     } catch (error) {
         console.log(error);
@@ -28,15 +36,15 @@ router.post("/ask/:id", async (req, res) => {
 
         /// Creating book document
         if (book) {
-            const userBook = await prisma.book.create({
+            await prisma.book.create({
                 data: {
                     title: book.title,
                     author: book.author,
                     status: "Pending",
                     userID: req.user
-                }
+                },
             });
-            res.json({ userBook });
+            res.json({ "message": "request submitted" });
         }
         else {
             console.log("Failed to add :(");
@@ -53,15 +61,27 @@ router.post("/ask/:id", async (req, res) => {
 router.get("/issued", async (req, res) => {
     try {
         const issuedBooks = await prisma.book.findMany({
-            where:{
+            where: {
                 status: "Issued",
                 userID: req.user
+            },
+            select: {
+                title: true,
+                author: true,
+                returnDate: true,
+                user: {
+                    select: {
+                        name: true,
+                        email: true,
+                        contact: true
+                    }
+                }
             }
         })
         res.json(issuedBooks);
     } catch (error) {
         console.log(error);
-        res.josn({"error": "see console"});
+        res.josn({ "error": "see console" });
     }
 })
 
@@ -69,10 +89,10 @@ router.get("/issued", async (req, res) => {
 router.get("/profile", async (req, res) => {
     try {
         const userProfile = await prisma.user.findUnique({
-            where:{
+            where: {
                 id: req.user
             },
-            include:{
+            select: {
                 email: true,
                 username: true,
                 contact: true,
@@ -83,9 +103,46 @@ router.get("/profile", async (req, res) => {
         res.json(userProfile)
     } catch (error) {
         console.error(error);
-        res.json({"error": "see console"});
+        res.json({ "error": "see console" });
     }
 })
+
+//! update profile
+router.put("/profile", async (req, res) => {
+    const { contact, name, idCard } = req.body
+    try {
+        await prisma.user.update({
+            data: {
+                contact,
+                name,
+                idCard,
+            },
+            where: {
+                id: req.user
+            }
+        })
+        res.json({ "message": "successfully updated" });
+    } catch (error) {
+        console.log(error);
+        res.json({ "error": "see console" });
+    }
+})
+
+//! Logout
+router.delete("/logout", async (req, res) => {
+    try {
+        await prisma.token.deleteMany({
+            where: {
+                userID: req.user
+            }
+        })
+        res.json({ "message": "logout successful" });
+    } catch (error) {
+        console.log(error);
+        res.json({ "error": "see console" });
+    }
+})
+
 router.put("/verify")
 
 export default router

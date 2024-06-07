@@ -12,7 +12,7 @@ export async function lastUserVisit(req, res, next) {
                 id: req.user
             }
         })
-        console.log("new visit");
+        // visit updated
         next();
     } catch (error) {
         console.log(error);

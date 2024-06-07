@@ -24,10 +24,12 @@ import { lastAdminVisit } from "./middlewares/lastAdminVisit.js";
 import { updateUserToken } from "./middlewares/updateUserToken.js";
 import { updateAdminToken } from "./middlewares/updateAdminToken.js";
 
+import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use("/signup", encryption, signUp);
 app.use("/login", login);
