@@ -25,13 +25,18 @@ import { updateUserToken } from "./middlewares/updateUserToken.js";
 import { updateAdminToken } from "./middlewares/updateAdminToken.js";
 
 import cookieParser from "cookie-parser";
+import { verifyEmail } from "./middlewares/verifyEmail.js";
+
+import getOTP from "./routes/getOTP.js"
+
 const app = express();
 
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use("/signup", encryption, signUp);
+app.use("/get-otp", getOTP)
+app.use("/signup", verifyEmail, encryption, signUp);
 app.use("/login", login);
 app.use("/user", verifyToken, updateUserToken, lastUserVisit, user);
 app.use("/admin", verifyAdminToken, updateAdminToken, lastAdminVisit, admin);

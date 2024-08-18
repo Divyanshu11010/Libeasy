@@ -1,2 +1,15 @@
 node_modules
 .env
+Frontend/package-lock.json
+Frontend/package.json
+Frontend/tailwind.config.js
+Frontend/assets/book.svg
+Frontend/assets/book2.png
+Frontend/assets/logo.svg
+Frontend/assets/profile.svg
+Frontend/build/books.html
+Frontend/build/index.html
+Frontend/build/signup.html
+Frontend/build/css/signup.css
+Frontend/build/css/style.css
+Frontend/src/input.css

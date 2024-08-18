@@ -1,11 +1,21 @@
-### Admin signup
-POST http://localhost:5000/signup/admin HTTP/1.1
+### Get - OTP
+POST http://localhost:5000/get-otp?type=admin HTTP/1.1
 Content-Type: application/json
 
 {
-    "email" : "dvishu2610@gmail.com",
+    "email" : "ui22ec65@iiitsurat.ac.in"
+}
+
+### Admin signup
+POST http://localhost:5000/signup/admin?type=admin HTTP/1.1
+Content-Type: application/json
+
+{
+    "email" : "ui22ec65@iiitsurat.ac.in",
     "username" : "Divyanshu",
-    "password" : "dvishu$123"
+    "password" : "dvishu$123",
+    "adminOTP" : "203994",
+    "otp" : "315427"
 }
 
 ### Admin login

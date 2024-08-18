@@ -43,15 +43,24 @@ model Admin {
 }
 
 model Book {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt  DateTime @default(now())
-  updateAt   DateTime @updatedAt
-  title      String   @unique
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime  @default(now())
+  updateAt   DateTime  @updatedAt
+  title      String    @unique
   author     String
-  status     String   @default("Request")
+  status     String    @default("Request")
   returnDate DateTime?
-  userID     String   @db.ObjectId
-  user       User     @relation(fields: [userID], references: [id])
+  userID     String    @db.ObjectId
+  user       User      @relation(fields: [userID], references: [id])
+}
+
+model Otp {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  email     String   @unique
+  otp       String
+  validity  DateTime
+  used      Boolean  @default(false)
 }
 
 model Token {
@@ -73,4 +82,18 @@ model Booklist {
   author  String
   ISBN    String  @unique
   details String
+}
+
+model Notification {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  message       Json
+  date          DateTime      @default(now())
+  isRead        Boolean       @default(false)
+  recipientID   String        @db.ObjectId
+  recipientType RecipientType
+}
+
+enum RecipientType {
+  USER
+  ADMIN
 }
