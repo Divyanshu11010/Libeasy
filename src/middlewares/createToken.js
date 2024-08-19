@@ -9,7 +9,7 @@ export async function createUserToken(req, res, next) {
     //. check if there is refresh token cookie
     const userRefToken = req.cookies ? req.cookies.refreshToken : null;
     if (!userRefToken) {
-        return res.json({ error: "Unauthorized access (Do login)" });
+        return res.json({ error: "Unauthorized access! Do login" });
     }
     try {
         if (req.user) {
@@ -76,10 +76,10 @@ export async function createUserToken(req, res, next) {
 
             //. update dentist id in req object
             req.user = userId;
+            next();
         } else {
             return res.json({ error: "Do Login!" });
         }
-        next();
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal Server Error" });
@@ -91,7 +91,7 @@ export async function createAdminToken(req, res, next) {
     //. check if there is refresh token cookie
     const adminRefToken = req.cookies ? req.cookies.refreshToken : null;
     if (!adminRefToken) {
-        return res.json({ error: "Unauthorized access (Do login)" });
+        return res.json({ error: "Unauthorized access(P100)! Do login" });
     }
     try {
         if (req.admin) {
@@ -159,7 +159,7 @@ export async function createAdminToken(req, res, next) {
             //. update dentist id in req object
             req.admin = adminId;
         } else {
-            return res.json({ error: "Do Login!" });
+            return res.json({ error: "Unauthorized access(P102)! Do Login" });
         }
         next();
     } catch (error) {

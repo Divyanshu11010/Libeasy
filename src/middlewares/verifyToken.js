@@ -22,7 +22,7 @@ export async function verifyUserToken(req, res, next) {
             })
 
             if (!dbtoken) {
-                return res.status(401).json({ error: "Unauthorized access(P100)" })
+                return res.status(401).json({ error: "Unauthorized access(P100)! Do login" })
             }
 
             if (!dbtoken.valid) {
@@ -40,11 +40,12 @@ export async function verifyUserToken(req, res, next) {
                 }
             })
             if (!dbuser) {
-                return res.status(401).json({ "error": "Unauthorized access" });
+                return res.status(401).json({ error: "Unauthorized access! Do login" });
             }
 
             //. adding {user: userID} in the req object
             req.user = dbtoken.userID
+            next();
         } catch (error) {
             if (error.name === "TokenExpiredError") {
                 try {
@@ -56,10 +57,8 @@ export async function verifyUserToken(req, res, next) {
                     console.error("Error updating token validity: ", updateError);
                 }
             } else {
-                return res.status(401).json({ error: "Unauthorized access(P103)" });
+                return res.status(401).json({ error: "Unauthorized access(P103)! Do login" });
             }
-        } finally {
-            next();
         }
     }
 }
@@ -82,7 +81,7 @@ export async function verifyAdminToken(req, res, next) {
             })
 
             if (!dbtoken) {
-                return res.status(401).json({ error: "Unauthorized access(P100)" })
+                return res.status(401).json({ error: "Unauthorized access(P100)! Do login" })
             }
 
             if (!dbtoken.valid) {
@@ -100,11 +99,12 @@ export async function verifyAdminToken(req, res, next) {
                 }
             })
             if (!dbAdmin) {
-                return res.status(401).json({ "error": "Unauthorized access" });
+                return res.status(401).json({ error: "Unauthorized access! Do login" });
             }
 
             //. adding {user: userID} in the req object
             req.admin = dbtoken.userID
+            next();
         } catch (error) {
             if (error.name === "TokenExpiredError") {
                 try {
@@ -116,10 +116,8 @@ export async function verifyAdminToken(req, res, next) {
                     console.error("Error updating token validity: ", updateError);
                 }
             } else {
-                return res.status(401).json({ error: "Unauthorized access(P103)" });
+                return res.status(401).json({ error: "Unauthorized access(P103)! Do login" });
             }
-        } finally {
-            next();
         }
     }
 }

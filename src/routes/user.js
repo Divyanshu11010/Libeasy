@@ -27,31 +27,28 @@ router.get("/all_books", async (req, res) => {
 router.post("/ask/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        if (req.user) {/// Fetching the book
-            const book = await prisma.booklist.findUnique({
-                where: {
-                    id
-                }
-            })
+        /// Fetching the book
+        const book = await prisma.booklist.findUnique({
+            where: {
+                id
+            }
+        })
 
-            /// Creating book document
-            if (book) {
-                await prisma.book.create({
-                    data: {
-                        title: book.title,
-                        author: book.author,
-                        status: "Pending",
-                        userID: req.user
-                    },
-                });
-                res.json({ "message": "request submitted" });
-            }
-            else {
-                console.log("Failed to add :(");
-                res.end();
-            }
-        } else {
-            res.status(401).json({ error: "Unauthorized Access(P100)" })
+        /// Creating book document
+        if (book) {
+            await prisma.book.create({
+                data: {
+                    title: book.title,
+                    author: book.author,
+                    status: "Pending",
+                    userID: req.user
+                },
+            });
+            res.json({ "message": "request submitted" });
+        }
+        else {
+            console.log("Failed to add :(");
+            res.end();
         }
     } catch (error) {
         console.log(error);
@@ -62,29 +59,25 @@ router.post("/ask/:id", async (req, res) => {
 //! Get the list of issued books
 router.get("/issued", async (req, res) => {
     try {
-        if (req.user) {
-            const issuedBooks = await prisma.book.findMany({
-                where: {
-                    status: "Issued",
-                    userID: req.user
-                },
-                select: {
-                    title: true,
-                    author: true,
-                    returnDate: true,
-                    user: {
-                        select: {
-                            name: true,
-                            email: true,
-                            contact: true
-                        }
+        const issuedBooks = await prisma.book.findMany({
+            where: {
+                status: "Issued",
+                userID: req.user
+            },
+            select: {
+                title: true,
+                author: true,
+                returnDate: true,
+                user: {
+                    select: {
+                        name: true,
+                        email: true,
+                        contact: true
                     }
                 }
-            })
-            res.json(issuedBooks);
-        } else {
-            res.status(401).json({ error: "Unauthorized Access(P100)" })
-        }
+            }
+        })
+        res.json(issuedBooks);
     } catch (error) {
         console.log(error);
         res.josn({ "error": "see console" });
@@ -94,23 +87,19 @@ router.get("/issued", async (req, res) => {
 //! See profile
 router.get("/profile", async (req, res) => {
     try {
-        if (req.user) {
-            const userProfile = await prisma.user.findUnique({
-                where: {
-                    id: req.user
-                },
-                select: {
-                    email: true,
-                    username: true,
-                    contact: true,
-                    name: true,
-                    idCard: true,
-                }
-            })
-            res.json(userProfile)
-        } else {
-            res.status(401).json({ error: "Unauthorized Access(P100)" })
-        }
+        const userProfile = await prisma.user.findUnique({
+            where: {
+                id: req.user
+            },
+            select: {
+                email: true,
+                username: true,
+                contact: true,
+                name: true,
+                idCard: true,
+            }
+        })
+        res.json(userProfile)
     } catch (error) {
         console.error(error);
         res.json({ "error": "see console" });
@@ -121,22 +110,17 @@ router.get("/profile", async (req, res) => {
 router.put("/profile", async (req, res) => {
     const { contact, name, idCard } = req.body
     try {
-        if (req.user) {
-            await prisma.user.update({
-                data: {
-                    contact,
-                    name,
-                    idCard,
-                },
-                where: {
-                    id: req.user
-                }
-            })
-            res.json({ "message": "successfully updated" });
-        } else {
-            res.status(401).json({ error: "Unauthorized Access(P100)" })
-        }
-
+        await prisma.user.update({
+            data: {
+                contact,
+                name,
+                idCard,
+            },
+            where: {
+                id: req.user
+            }
+        })
+        res.json({ "message": "successfully updated" });
     } catch (error) {
         console.log(error);
         res.json({ "error": "see console" });
@@ -146,16 +130,12 @@ router.put("/profile", async (req, res) => {
 //! Logout
 router.delete("/logout", async (req, res) => {
     try {
-        if (req.user) {
-            await prisma.token.deleteMany({
-                where: {
-                    userID: req.user
-                }
-            })
-            res.json({ "message": "logout successful" });
-        } else {
-            res.status(401).json({ error: "Unauthorized Access(P100)" })
-        }
+        await prisma.token.deleteMany({
+            where: {
+                userID: req.user
+            }
+        })
+        res.json({ "message": "logout successful" });
     } catch (error) {
         console.log(error);
         res.json({ "error": "see console" });
