@@ -24,7 +24,6 @@ model User {
   name       String?
   idCard     String?
   isVerified Boolean  @default(false)
-  lastVisit  DateTime
   books      Book[]
   token      Token[]
 }
@@ -38,7 +37,6 @@ model Admin {
   name       String?
   password   String   @unique
   isVerified Boolean  @default(false)
-  lastVisit  DateTime
   token      Token[]
 }
 
@@ -69,8 +67,8 @@ model Token {
   updateAt  DateTime @updatedAt
   authToken String   @unique
   valid     Boolean
-  exprTime  DateTime
-  userID    String   @unique @db.ObjectId
+  type      String
+  userID    String   @db.ObjectId
   user      User?    @relation(fields: [userID], references: [id])
   admin     Admin?   @relation(fields: [userID], references: [id])
 }

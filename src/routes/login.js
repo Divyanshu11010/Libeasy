@@ -8,10 +8,7 @@ import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 
 //. for token
-import genAuthToken from "../utils/genAuthToken.js";
-
-//. to generate expiration period for token
-import expiry from "../utils/expiry.js";
+import { genAuthToken, genRefToken } from "../utils/genAuthToken.js";
 
 //. to parse incoming cookie
 import cookieParser from "cookie-parser";
@@ -21,9 +18,6 @@ const router = Router();
 
 const app = express();
 app.use(cookieParser());
-
-//. cookie expiration for 7 days
-const cookieExpr = new Date(Date.now() + 24 * 7 * 3600 * 1000);
 
 //! User login
 router.post("/user", async (req, res) => {
@@ -41,36 +35,82 @@ router.post("/user", async (req, res) => {
         const check = await bcrypt.compare(req.body.password, user.password);
 
         if (check) {
+            //. check if the user is having any valid session in db
+            const session = await prisma.token.findMany({
+                where: {
+                    type: "refresh",
+                    valid: true,
+                    userID: user.id
+                }
+            })
 
-            //. generating access token
-            const accessToken = genAuthToken(user.id);
+            if (!session.length) {
+                //. generating access token
+                const accessToken = genAuthToken(user.id);
+                const refreshToken = genRefToken(user.id);
 
-            //. creating token object in db
-            if (accessToken) {
-                await prisma.token.create({
-                    data: {
-                        authToken: accessToken,
-                        valid: true,
-                        exprTime: expiry,
-                        user: {
-                            connect: {
-                                email: user.email
+                //. creating token object in db
+                if (accessToken && refreshToken) {
+                    // access token
+                    await prisma.token.create({
+                        data: {
+                            authToken: accessToken,
+                            valid: true,
+                            type: "access",
+                            user: {
+                                connect: {
+                                    email: user.email
+                                }
                             }
                         }
-                    }
-                })
+                    })
+
+                    // refresh token
+                    await prisma.token.create({
+                        data: {
+                            authToken: refreshToken,
+                            valid: true,
+                            type: "refresh",
+                            user: {
+                                connect: {
+                                    email: user.email
+                                }
+                            }
+                        }
+                    })
+                }
+
+                //. Set the cookie with the access token
+                const date = new Date();
+                const ACCESS_COOKIE_EXPR_MIN = process.env.ACCESS_COOKIE_EXPR_MIN || 10
+                const accessCookieExp = new Date(date.getTime() + ACCESS_COOKIE_EXPR_MIN * 60 * 1000);
+
+                //. Set the cookie with the access token for admin
+                res.cookie('authToken', accessToken, {
+                    // domain: "localhost:5000",
+                    path: "/user",
+                    httpOnly: true,
+                    secure: false,
+                    expires: accessCookieExp
+                });
+
+                //. Set the cookie with the refresh token 
+                const REFRESH_COOKIE_EXPR_DAYS = process.env.REFRESH_COOKIE_EXPR_DAYS || 7
+                const refreshCookieExp = new Date(date.getTime() + REFRESH_COOKIE_EXPR_DAYS * 24 * 60 * 60 * 1000);
+
+                //. Set the cookie with the access token for admin
+                res.cookie('refreshToken', refreshToken, {
+                    // domain: "localhost:5000",
+                    path: "/user",
+                    httpOnly: true,
+                    secure: false,
+                    expires: refreshCookieExp
+                });
+
+                res.json({ "message": "successful login" });
+            } else {
+                res.json({ error: "already logged in :)" });
             }
-
-            //. Set the cookie with the access token for admin
-            res.cookie('authToken', accessToken, {
-                // domain: "localhost:5000",
-                path: "/user",
-                httpOnly: true,
-                secure: false,
-                expires: cookieExpr
-            });
-
-            res.json({ "message": "successful login" });
         }
         else {
             res.json({ "error:": "Wrong Combination" });
@@ -90,45 +130,96 @@ router.post("/admin", async (req, res) => {
             }
         })
 
-        //. Comparing the password with hashed value
+        //. Comparing the db password with entered password
+        if (!admin) {
+            res.status(401).json({ "error": "Unauthorized access" });
+        }
         const check = await bcrypt.compare(req.body.password, admin.password);
 
         if (check) {
-            //. generate auth token
-            const accessToken = genAuthToken(admin.id);
+            //. check if the user is having any valid session in db
+            const session = await prisma.token.findMany({
+                where: {
+                    type: "refresh",
+                    valid: true,
+                    userID: admin.id
+                }
+            })
 
-            if (accessToken) {
-                //. Token creation
-                await prisma.token.create({
-                    data: {
-                        authToken: accessToken,
-                        valid: true,
-                        exprTime: expiry,
-                        admin: {
-                            connect: {
-                                email: admin.email
+            if (!session.length) {
+                //. generating access token
+                const accessToken = genAuthToken(admin.id);
+                const refreshToken = genRefToken(admin.id);
+
+                //. creating token object in db
+                if (accessToken && refreshToken) {
+                    // access token
+                    await prisma.token.create({
+                        data: {
+                            authToken: accessToken,
+                            valid: true,
+                            type: "access",
+                            admin: {
+                                connect: {
+                                    email: admin.email
+                                }
                             }
                         }
-                    }
-                })
+                    })
+
+                    // refresh token
+                    await prisma.token.create({
+                        data: {
+                            authToken: refreshToken,
+                            valid: true,
+                            type: "refresh",
+                            admin: {
+                                connect: {
+                                    email: admin.email
+                                }
+                            }
+                        }
+                    })
+                }
+
+                //. Set the cookie with the access token
+                const date = new Date();
+                const ACCESS_COOKIE_EXPR_MIN = process.env.ACCESS_COOKIE_EXPR_MIN || 10
+                const accessCookieExp = new Date(date.getTime() + ACCESS_COOKIE_EXPR_MIN * 60 * 1000);
+
+                //. Set the cookie with the access token for admin
+                res.cookie('authToken', accessToken, {
+                    // domain: "localhost:5000",
+                    path: "/admin",
+                    httpOnly: true,
+                    secure: false,
+                    expires: accessCookieExp
+                });
+
+                //. Set the cookie with the refresh token 
+                const REFRESH_COOKIE_EXPR_DAYS = process.env.REFRESH_COOKIE_EXPR_DAYS || 7
+                const refreshCookieExp = new Date(date.getTime() + REFRESH_COOKIE_EXPR_DAYS * 24 * 60 * 60 * 1000);
+
+                //. Set the cookie with the access token for admin
+                res.cookie('refreshToken', refreshToken, {
+                    // domain: "localhost:5000",
+                    path: "/admin",
+                    httpOnly: true,
+                    secure: false,
+                    expires: refreshCookieExp
+                });
+
+                res.json({ "message": "successful login" });
+            } else {
+                res.json({ error: "already logged in :)" });
             }
-
-            //. Set the cookie with the access token for admin
-            res.cookie('authToken', accessToken, {
-                // domain: "localhost:5000",
-                path: "/admin",
-                httpOnly: true,
-                secure: false,
-                expires: cookieExpr
-            });
-
-            res.json({ "message": "successful login" });
         }
         else {
-            res.json({"message": "Wrong combination"});
+            res.json({ "error:": "Wrong Combination" });
         }
     } catch (error) {
         console.log(error);
+        res.json({ "error": "see console" })
     }
 })
 

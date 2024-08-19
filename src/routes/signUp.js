@@ -17,7 +17,7 @@ router.post("/user", async (req, res) => {
                     contact,
                     username,
                     password,
-                    lastVisit: new Date()
+                    isVerified: true
                 }
             })
 
@@ -47,7 +47,7 @@ router.post("/admin", async (req, res) => {
                     email,
                     username,
                     password,
-                    lastVisit: new Date()
+                    isVerified: true
                 }
             })
             res.status(200).json({ "message": "Account created" });
