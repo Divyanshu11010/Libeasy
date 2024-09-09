@@ -3,7 +3,7 @@ POST http://localhost:5000/get-otp?type=user HTTP/1.1
 Content-Type: application/json
 
 {
-    "email" : "ui22ec23@iiitsurat.ac.in"
+    "email" : "[email]"
 }
 
 ### User signup
@@ -11,11 +11,11 @@ POST http://localhost:5000/signup/user?type=user HTTP/1.1
 Content-Type: application/json
 
 {
-    "email" : "ui22ec23@iiitsurat.ac.in",
-    "contact": "9580126717",
-    "username" : "ui22ec23",
-    "password" : "svishwa@123",
-    "otp": "989945"
+    "email" : "[email]",
+    "contact": "[mobile no.]",
+    "username" : "[username]",
+    "password" : "[password]",
+    "otp": "[otp]"
 }
 
 ### User login
@@ -23,8 +23,8 @@ POST http://localhost:5000/login/user HTTP/1.1
 Content-Type: application/json
 
 {
-    "username" : "ui22ec23",
-    "password" : "svishwa@123"
+    "username" : "[username]",
+    "password" : "[password]"
 }
 
 ### Get list of all books
@@ -44,9 +44,15 @@ PUT http://localhost:5000/user/profile HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Divyanshu vishu",
-    "idCard": "This is the image string of id"
+    "name": "[your name]",
+    "idCard": "[id card string]"
 }
+
+### Get notifications
+GET http://localhost:5000/user/notification HTTP/1.1
+
+### Read notifications
+DELETE http://localhost:5000/user/notification/66d97ad26902dd63e58b96dc HTTP/1.1
 
 ### Logout user
 DELETE http://localhost:5000/user/logout HTTP/1.1

@@ -3,7 +3,7 @@ POST http://localhost:5000/get-otp?type=admin HTTP/1.1
 Content-Type: application/json
 
 {
-    "email" : "ui22ec65@iiitsurat.ac.in"
+    "email" : "[email]"
 }
 
 ### Admin signup
@@ -11,11 +11,11 @@ POST http://localhost:5000/signup/admin?type=admin HTTP/1.1
 Content-Type: application/json
 
 {
-    "email" : "ui22ec65@iiitsurat.ac.in",
-    "username" : "Divyanshu",
-    "password" : "dvishu$123",
-    "adminOTP" : "203994",
-    "otp" : "315427"
+    "email" : "[email]",
+    "username" : "[username]",
+    "password" : "[password]",
+    "adminOTP" : "[office otp]",
+    "otp" : "[your otp]"
 }
 
 ### Admin login
@@ -23,8 +23,8 @@ POST http://localhost:5000/login/admin HTTP/1.1
 Content-Type: application/json
 
 {
-    "username" : "Divyanshu",
-    "password" : "dvishu$123"
+    "username" : "[username]",
+    "password" : "[password]"
 }
 
 ### Add book (admin)
@@ -32,10 +32,10 @@ POST http://localhost:5000/admin/add_book HTTP/1.1
 Content-Type: application/json
 
 {
-    "title": "Micro Electronics",
-    "author": "Sedra and Smith",
-    "ISBN": "abc1101011010",
-    "details": "The best solution for amplifiers"
+    "title": "[book title]",
+    "author": "[author]",
+    "ISBN": "[ISBN no.]",
+    "details": "[descryption]"
 }
 
 ### Remove book
@@ -54,10 +54,19 @@ GET http://localhost:5000/admin/user_list HTTP/1.1
 GET http://localhost:5000/admin/requests HTTP/1.1
 
 ### Resolve issue
-PUT http://localhost:5000/admin/issue/6661585ad3a85e52d71ef407 HTTP/1.1
+PUT http://localhost:5000/admin/issue/66ddd7a1a14ecc265e3d6706 HTTP/1.1
+
+### Reject issue
+POST http://localhost:5000/admin/reject/66ddd385cff93243dba3317f HTTP/1.1
 
 ### Accept return
-DELETE http://localhost:5000/admin/return/6660259dec675a0311b313c9 HTTP/1.1
+DELETE http://localhost:5000/admin/return/66ddd7a1a14ecc265e3d6706 HTTP/1.1
+
+### Get notifications
+GET http://localhost:5000/admin/notification HTTP/1.1
+
+### Read notifications
+DELETE http://localhost:5000/admin/notification/66ddb84dc2e54bbc1ce1893f HTTP/1.1
 
 ### Logout admin
 DELETE http://localhost:5000/admin/logout HTTP/1.1

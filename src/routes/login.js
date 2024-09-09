@@ -5,7 +5,7 @@ import { Router } from "express";
 import bcrypt from "bcrypt";
 
 //. for db
-import { PrismaClient } from "@prisma/client";
+import prisma from "../utils/prismaClient.js";
 
 //. for token
 import { genAuthToken, genRefToken } from "../utils/genAuthToken.js";
@@ -13,7 +13,6 @@ import { genAuthToken, genRefToken } from "../utils/genAuthToken.js";
 //. to parse incoming cookie
 import cookieParser from "cookie-parser";
 
-const prisma = new PrismaClient;
 const router = Router();
 
 const app = express();

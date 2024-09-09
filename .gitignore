@@ -13,3 +13,5 @@ Frontend/build/signup.html
 Frontend/build/css/signup.css
 Frontend/build/css/style.css
 Frontend/src/input.css
+user.http
+admin.http

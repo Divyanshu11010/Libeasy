@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
+import prisma from "./prismaClient.js";
 
-const prisma = new PrismaClient();
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "@localSecretDiv";
 
 //! user refresh token verification

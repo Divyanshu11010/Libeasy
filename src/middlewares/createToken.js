@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../utils/prismaClient.js";
 import { genAuthToken, genRefToken } from "../utils/genAuthToken.js";
 import { verifyUserRefToken, verifyAdminRefToken } from "../utils/verifyRefToken.js";
 
-const prisma = new PrismaClient();
 
 //! Refreshing user token
 export async function createUserToken(req, res, next) {
@@ -34,7 +33,7 @@ export async function createUserToken(req, res, next) {
                     authToken: newAccess,
                     valid: true,
                     type: "access",
-                    dentist: { connect: { id: userId } },
+                    user: { connect: { id: userId } },
                 },
             });
 
@@ -44,7 +43,7 @@ export async function createUserToken(req, res, next) {
                     authToken: newRefresh,
                     valid: true,
                     type: "refresh",
-                    dentist: { connect: { id: userId } },
+                    user: { connect: { id: userId } },
                 },
             });
 
@@ -74,7 +73,7 @@ export async function createUserToken(req, res, next) {
                 expires: refreshCookieExp,
             });
 
-            //. update dentist id in req object
+            //. update user id in req object
             req.user = userId;
             next();
         } else {
@@ -116,7 +115,7 @@ export async function createAdminToken(req, res, next) {
                     authToken: newAccess,
                     valid: true,
                     type: "access",
-                    dentist: { connect: { id: adminId } },
+                    admin: { connect: { id: adminId } },
                 },
             });
 
@@ -126,7 +125,7 @@ export async function createAdminToken(req, res, next) {
                     authToken: newRefresh,
                     valid: true,
                     type: "refresh",
-                    dentist: { connect: { id: adminId } },
+                    admin: { connect: { id: adminId } },
                 },
             });
 
@@ -156,7 +155,7 @@ export async function createAdminToken(req, res, next) {
                 expires: refreshCookieExp,
             });
 
-            //. update dentist id in req object
+            //. update admin id in req object
             req.admin = adminId;
         } else {
             return res.json({ error: "Unauthorized access(P102)! Do Login" });

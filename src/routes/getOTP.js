@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../utils/prismaClient.js";
 import { Router } from "express";
 
 import { sendMail } from "../services/sendMail.js";
@@ -7,7 +7,6 @@ import { genOTP } from "../utils/genOTP.js";
 const OTP_EXPR = process.env.OTP_EXPR || 10;
 const officeMail = process.env.officeMail
 
-const prisma = new PrismaClient();
 const router = Router();
 
 //! Helper function to generate and store OTP
@@ -56,8 +55,6 @@ router.post("/", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
-    } finally{
-        prisma.$disconnect();
     }
 });
 

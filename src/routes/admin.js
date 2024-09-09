@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../utils/prismaClient.js";
+import { deleteNotification } from "../utils/notificationUtils.js";
+import { overdueTrig } from "../utils/taskSchedulars.js";
 
-const prisma = new PrismaClient();
 const router = Router();
 
 //! Add book in the library
@@ -120,9 +121,40 @@ router.get("/user_list", async (req, res) => {
 router.delete("/return/:id", async (req, res) => {
     const { id } = req.params;
     try {
+        const book = await prisma.book.update({
+            where: {
+                id: id
+            },
+            data: {
+                status: "Returned",
+                bookID: null
+            }
+        })
+
         await prisma.book.delete({
             where: {
                 id: id
+            }
+        })
+
+        /// delete current pending requests from both sides
+        await deleteNotification(id);
+
+        /// notification alert for issue of the book
+        const content = {
+            title: book.title,
+            status: book.status,
+            issuedOn: book.updatedAt,
+        }
+
+        await prisma.notification.create({
+            data: {
+                type: "RETURNED",
+                content: content,
+                recptType: "USER",
+                userID: book.userID,
+                adminID: req.admin,
+                bookID: id
             }
         })
         res.json({ "message": "return accepted" });
@@ -159,22 +191,143 @@ router.get("/requests", async (req, res) => {
 })
 
 //! Issue requested book
+const HOLD_PERIOD_DAYS = new Date(Date.now() + 15000);
+// const HOLD_PERIOD_DAYS = new Date(Date.now() + process.env.HOLD_PERIOD_DAYS * 24 * 60 * 60 * 1000);
+
 router.put("/issue/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        await prisma.book.update({
+        const book = await prisma.book.update({
             data: {
                 status: "Issued",
-                returnDate: new Date()
+                returnDate: HOLD_PERIOD_DAYS
             },
             where: {
                 id: id
             }
         })
+
+        /// delete current pending requests from both sides
+        await deleteNotification(id);
+        // await prisma.notification.deleteMany({
+        //     where: {
+        //         bookID: id
+        //     }
+        // })
+
+        /// notification alert for issue of the book
+        const content = {
+            title: book.title,
+            status: book.status,
+            issuedOn: book.updatedAt,
+            returnBy: book.returnDate
+        }
+
+        await prisma.notification.create({
+            data: {
+                type: "ISSUE",
+                content: content,
+                recptType: "USER",
+                userID: book.userID,
+                adminID: req.admin,
+                bookID: id
+            }
+        })
+
+        overdueTrig(id, book.userID, req.admin);
         res.json({ "message": "successfully issued" });
     } catch (error) {
         console.log(error);
-        res.json({ "error": "see console" });
+        res.json({ error: "see console" });
+    }
+})
+
+//! Reject requested books
+router.post("/reject/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const book = await prisma.book.update({
+            where: {
+                id
+            },
+            data: {
+                status: "Rejected"
+            }
+        })
+
+        /// delete the rejected request
+        await prisma.book.deleteMany({
+            where: {
+                status: "Rejected"
+            }
+        })
+
+        /// delete the notification 
+        await deleteNotification(id);
+
+        /// create new notification
+        const content = {
+            title: book.title,
+            status: book.status,
+        }
+
+        await prisma.notification.create({
+            data: {
+                type: "REJECT",
+                content: content,
+                recptType: "USER",
+                userID: book.userID,
+                adminID: req.admin,
+                bookID: id
+            }
+        })
+
+        res.json({ message: "Successfully Rejected" });
+    } catch (error) {
+        console.log(error);
+        res.json({ error: "see console" });
+    }
+})
+
+//! To get all the notifications admin
+router.get("/notification", async (req, res) => {
+    try {
+        const ntfs = await prisma.notification.findMany({
+            where: {
+                recptType: "ADMIN",
+                adminID: req.admin
+            },
+            select: {
+                content: true,
+                date: true,
+                book: {
+                    select: {
+                        status: true
+                    }
+                }
+            },
+        })
+
+        res.status(201).json(ntfs);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+})
+
+//! To delete read notification for admin
+router.delete("/notification/:id", async (req, res) => {
+    const ntfId = req.params.id;
+    try {
+        await prisma.notification.delete({
+            where: {
+                id: ntfId
+            }
+        })
+        res.status(204).end();
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 })
 

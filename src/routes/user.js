@@ -1,8 +1,7 @@
 import { Router } from "express"
-import { PrismaClient } from "@prisma/client"
+import prisma from "../utils/prismaClient.js";
 
 const router = Router();
-const prisma = new PrismaClient();
 
 //! Get available books
 router.get("/all_books", async (req, res) => {
@@ -36,7 +35,7 @@ router.post("/ask/:id", async (req, res) => {
 
         /// Creating book document
         if (book) {
-            await prisma.book.create({
+            const reqBook = await prisma.book.create({
                 data: {
                     title: book.title,
                     author: book.author,
@@ -44,6 +43,36 @@ router.post("/ask/:id", async (req, res) => {
                     userID: req.user
                 },
             });
+
+            /// notification push
+            const admin = await prisma.admin.findUnique({
+                where: {
+                    type: "librarian"
+                }
+            });
+            if (admin.length === 0) {
+                throw new Error("No admins found");
+            }
+            const adminId = admin.id;
+
+            // notification content
+            const content = {
+                message: "Issue request pending",
+                title: book.title,
+            }
+
+            await prisma.notification.create({
+                data: {
+                    // admin recipient
+                    type: "REQUEST",
+                    recptType: "ADMIN",
+                    content: content,
+                    userID: req.user,
+                    adminID: adminId,
+                    bookID: reqBook.id
+                }
+            });
+
             res.json({ "message": "request submitted" });
         }
         else {
@@ -142,6 +171,46 @@ router.delete("/logout", async (req, res) => {
     }
 })
 
-router.put("/verify")
+//! Get all notifications
+router.get("/notification", async (req, res) => {
+    try {
+        let ntfs = await prisma.notification.findMany({
+            where: {
+                recptType: "USER",
+                userID: req.user
+            },
+            select: {
+                content: true,
+                date: true,
+                book: {
+                    select: {
+                        status: true
+                    }
+                }
+            },
+        })
+
+        res.status(201).json(ntfs);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+})
+
+//! To delete read notification for user
+router.delete("/notification/:id", async (req, res) => {
+    const ntfId = req.params.id;
+    try {
+        await prisma.notification.delete({
+            where: {
+                id: ntfId
+            }
+        })
+        res.status(204).end();
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+})
 
 export default router
