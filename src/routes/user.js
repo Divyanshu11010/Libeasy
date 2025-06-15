@@ -50,7 +50,7 @@ router.post("/ask/:id", async (req, res) => {
                     type: "librarian"
                 }
             });
-            if (admin.length === 0) {
+            if (!admin || admin.length === 0) {
                 throw new Error("No admins found");
             }
             const adminId = admin.id;
@@ -96,6 +96,7 @@ router.get("/issued", async (req, res) => {
             select: {
                 title: true,
                 author: true,
+                status: true,
                 returnDate: true,
                 user: {
                     select: {
@@ -107,6 +108,32 @@ router.get("/issued", async (req, res) => {
             }
         })
         res.json(issuedBooks);
+    } catch (error) {
+        console.log(error);
+        res.josn({ "error": "see console" });
+    }
+})
+
+//! Get the list of all books
+router.get("/books", async (req, res) => {
+    try {
+        const books = await prisma.book.findMany({
+            where: {
+                userID: req.user
+            },
+            select: {
+                title: true,
+                author: true,
+                user: {
+                    select: {
+                        name: true,
+                        email: true,
+                        contact: true
+                    }
+                }
+            }
+        })
+        res.json(books);
     } catch (error) {
         console.log(error);
         res.josn({ "error": "see console" });

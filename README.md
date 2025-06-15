@@ -42,7 +42,7 @@ This backend is built to be **scalable**, **secure**, and **flexible** to accomm
 
 ## Features  
 ### Notification 
-   - There will be a notification box containing following things.
-   - User will get notification for all the required information such accepted request, overdue reminder, successful return, admin messages.
-   - Admin will also get required notification such as issue requests and get the info about books which are in overdue period.
-   - And all the basic features has been implemented.
+   - There is a notification box containing following things.
+   - User gets notification for all the required information such accepted request, overdue reminder, successful return, admin messages.
+   - Admin also get required notification such as issue requests and get the info about books which are in overdue period.
+   - And all the basic features has been implemented of a notification box
