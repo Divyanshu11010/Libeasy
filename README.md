@@ -46,10 +46,10 @@ Libeasy acts as a robust backend service for managing library workflows. From bo
 
 * **Language & Runtime:** JavaScript (Node.js)
 * **Framework:** Express.js
-* **Database:** MongoDB (with Mongoose) or alternative supported DB
+* **Database:** Flexible database using Prisma
 * **Authentication:** JSON Web Tokens (JWT)
 * **Validation:** express-validator / Joi
-* **Development Tools:** Nodemon, thunder-client
+* **Development Tools:** Node.js, Nodemon, thunder-client
 
 ---
 
