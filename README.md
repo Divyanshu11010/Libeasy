@@ -167,24 +167,6 @@ GET http://localhost:5000/user/all_books
 ### Request a book
 POST http://localhost:5000/user/ask/6661527100d54b313ebe7c56
 
-### Get issued books
-GET http://localhost:5000/user/issued
-
-### Get profile
-GET http://localhost:5000/user/profile
-
-### Update profile
-PUT http://localhost:5000/user/profile
-Content-Type: application/json
-
-{
-    "name": "Alice Johnson",
-    "idCard": "ID123456789"
-}
-
-### Get notifications
-GET http://localhost:5000/user/notification
-
 ### Read a notification
 DELETE http://localhost:5000/user/notification/66d97ad26902dd63e58b96dc
 
@@ -197,14 +179,6 @@ DELETE http://localhost:5000/user/logout
 ### **Admin**
 
 ```http
-### Get OTP
-POST http://localhost:5000/get-otp?type=admin
-Content-Type: application/json
-
-{
-    "email": "admin@example.com"
-}
-
 ### Signup
 POST http://localhost:5000/signup/admin?type=admin
 Content-Type: application/json
@@ -240,32 +214,8 @@ Content-Type: application/json
 ### Remove a book
 DELETE http://localhost:5000/admin/remove_book/66601afdc0cd4ce0c6358941
 
-### Get all books
-GET http://localhost:5000/admin/all_books
-
 ### Get all issued books
 GET http://localhost:5000/admin/issued_books
-
-### Get all users
-GET http://localhost:5000/admin/user_list
-
-### View issue requests
-GET http://localhost:5000/admin/requests
-
-### Approve an issue
-PUT http://localhost:5000/admin/issue/66ddd7a1a14ecc265e3d6706
-
-### Reject an issue
-POST http://localhost:5000/admin/reject/66ddd385cff93243dba3317f
-
-### Accept return
-DELETE http://localhost:5000/admin/return/66ddd7a1a14ecc265e3d6706
-
-### Get notifications
-GET http://localhost:5000/admin/notification
-
-### Read a notification
-DELETE http://localhost:5000/admin/notification/66ddb84dc2e54bbc1ce1893f
 
 ### Logout
 DELETE http://localhost:5000/admin/logout
@@ -277,8 +227,8 @@ DELETE http://localhost:5000/admin/logout
 
 Ready-to-use `.http` files are available for quick testing:
 
-* **[User API Requests](./requests/userRequests.http)** – User signup, login, book requests, and profile management.
-* **[Admin API Requests](./requests/adminRequests.http)** – Admin authentication, book management, issue handling, and notifications.
+* **[User API Requests](https://github.com/Divyanshu11010/Libeasy/blob/main/userRequests.http)** – User signup, login, book requests, and profile management.
+* **[Admin API Requests](https://github.com/Divyanshu11010/Libeasy/blob/main/adminRequests.http)** – Admin authentication, book management, issue handling, and notifications.
 
 ---
 
